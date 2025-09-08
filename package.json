@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npx playwright install chromium"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "dependencies": {
-    "express": "^5.1.0",
-    "formiojs": "^4.21.7",
-    "playwright": "^1.54.2"
+    "dotenv": "17.2.2",
+    "express": "5.1.0",
+    "formiojs": "4.21.7",
+    "morgan": "1.10.1",
+    "playwright": "1.55.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
