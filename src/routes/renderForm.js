@@ -3,7 +3,7 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { FORMIO_SERVER, FORMIO_API_KEY } from '../config.js';
 
-const templatePath = join(process.cwd(), 'templates', 'form-template.html');
+const templatePath = join(process.cwd(), 'src', 'templates', 'form-template.html');
 
 export default async function renderForm(req, res) {
   const { formPath, submissionId } = req.query;

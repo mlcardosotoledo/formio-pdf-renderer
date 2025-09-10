@@ -1,4 +1,4 @@
-import { PORT } from '../config.js';
+import { PORT, API_KEY } from '../config.js';
 import logger from '../logger.js';
 import { getBrowser } from '../browser.js';
 
@@ -25,7 +25,15 @@ export default async function generatePdf(req, res, next) {
 
     log.info('Cargando página de formularios...');
 
-    const response = await page.goto(renderUrl, { waitUntil: 'networkidle', signal });
+    const response = await page.goto(
+      renderUrl, 
+      {
+        waitUntil: 'networkidle', 
+        signal,
+        headers: {
+          'x-api-key': API_KEY
+        }
+      });
 
     if (!response) throw new Error('No se recibió respuesta al navegar la página');
     if (response.status() >= 400) throw new Error(`Error al cargar la página: HTTP ${response.status()}`);

@@ -8,12 +8,15 @@ import { getBrowser } from './browser.js';
 import { PORT } from './config.js';
 import generatePdfRouter from './routes/generatePdf.js';
 import renderForm from './routes/renderForm.js';
+import checkApiKey from './middlewares/checkApiKey.js'
 
 const app = express();
 
 app.use(timeout("5s"));
 
 app.use(morgan('combined'));
+
+app.use(checkApiKey);
 
 app.use(nocache());
 
