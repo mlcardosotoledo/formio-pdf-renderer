@@ -5,7 +5,7 @@ import logger from './logger.js';
 import timeout from "connect-timeout";
 import { join } from 'path';
 import { getBrowser } from './browser.js';
-import { PORT } from './config.js';
+import { API_KEY, PORT } from './config.js';
 import generatePdfRouter from './routes/generatePdf.js';
 import renderForm from './routes/renderForm.js';
 import checkApiKey from './middlewares/checkApiKey.js'
@@ -16,8 +16,6 @@ app.use(timeout("5s"));
 
 app.use(morgan('combined'));
 
-app.use(checkApiKey);
-
 app.use(nocache());
 
 app.use((req, res, next) => { 
@@ -26,15 +24,20 @@ app.use((req, res, next) => {
 
 app.use(express.static(join(process.cwd(), 'public')));
 
-app.get('/generate-pdf', generatePdfRouter);
-app.get('/render-form', renderForm);
+app.get('/generate-pdf', checkApiKey, generatePdfRouter);
+app.get('/render-form', checkApiKey, renderForm);
 
 app.use((err, req, res, next) => {
-  logger.error(err.stack);
+  if (err instanceof Error) {
+    logger.error(err.message);
+  } else {
+    logger.error(err);
+  }
   res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(PORT, () => {
+logger.info(console.profile.length)
   logger.info(`Servidor escuchando en http://localhost:${PORT}`);
 });
 

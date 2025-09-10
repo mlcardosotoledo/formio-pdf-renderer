@@ -20,6 +20,7 @@
 		(async () => {
 
 			window.formIsReady = false;
+			window.errorMessage = null;
 
 			async function getFormSchema() {
 				const response = await fetch('{{FORM_URL}}', {
@@ -30,7 +31,7 @@
 				});
 
 				if (!response.ok) {
-					throw new Error('Error cargando formulario: ' + response.status);
+					throw new Error(`No se pudo cargar el schema del formulario (HttpStatus: ${response.status})`);
 				}
 
 				const formSchema = await response.json();
@@ -48,7 +49,7 @@
 					});
 
 				if (!response.ok) {
-					throw new Error('Error cargando submission: ' + response.status)
+					throw new Error(`No se pudo cargar la submission (HttpStatus: ${response.status})`);
 				}
 
 				const submissionData = await response.json();
@@ -72,6 +73,7 @@
 
 				window.formIsReady = true;
 			} catch (err) {
+				window.errorMessage = err.message;
 				document.getElementById('formio').innerText = 'Error: ' + err.message;
 			}
 		})();

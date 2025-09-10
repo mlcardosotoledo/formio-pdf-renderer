@@ -22,6 +22,6 @@ export default async function renderForm(req, res) {
     res.send(html);
   } catch (err) {
     logger.error(err);
-    res.status(500).send('Error cargando template');
+    res.status(500).send('Error procesando la plantilla del formulario');
   }
 }

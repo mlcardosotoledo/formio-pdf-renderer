@@ -1,7 +1,8 @@
-import { log } from 'winston';
+import logger from './../logger.js';
+import { API_KEY } from './../config.js'
 
 export default function checkApiKey(req, res, next) {
-  log.info('Validando Api Key')
+  logger.debug('Validando Api Key')
 
   const clientKey = req.headers['x-api-key'] || req.query.apiKey;
 

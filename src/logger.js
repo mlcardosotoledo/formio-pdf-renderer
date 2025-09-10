@@ -1,7 +1,8 @@
 import winston from 'winston';
+import { LOG_LEVEL } from './config.js'
 
 const logger = winston.createLogger({
-  level: 'debug',
+  level: LOG_LEVEL,
   format: winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.simple()

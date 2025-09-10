@@ -21,18 +21,20 @@ export default async function generatePdf(req, res, next) {
 
   try {
     const browser = await getBrowser();
+    
     page = await browser.newPage();
 
     log.info('Cargando página de formularios...');
 
+    await page.setExtraHTTPHeaders({
+      'x-api-key': API_KEY
+    });
+
     const response = await page.goto(
       renderUrl, 
       {
-        waitUntil: 'networkidle', 
-        signal,
-        headers: {
-          'x-api-key': API_KEY
-        }
+        waitUntil: 'domcontentloaded', 
+        signal
       });
 
     if (!response) throw new Error('No se recibió respuesta al navegar la página');
@@ -40,7 +42,19 @@ export default async function generatePdf(req, res, next) {
 
     log.info('Página de formularios cargada...');
 
-    await page.waitForFunction(() => window.formIsReady === true, { signal });
+    const handle = await page.waitForFunction(() => {
+      return window.formIsReady === true || window.errorMessage !== null;
+    });
+
+    const formErrorState = await page.evaluate(() => ({
+      error: window.errorMessage !== null,
+      errorMessage: window.errorMessage
+    }));
+
+    if (formErrorState.error) {
+      throw new Error(formErrorState.errorMessage)
+    }
+        
     if (req.timedout) return;
 
     log.info('Generando PDF...');
